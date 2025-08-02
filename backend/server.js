@@ -17,6 +17,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("QuickDesk backend is running 🚀");
 });
+const authRoutes = require("./routes/authRoutes");
+app.use("/api/users", authRoutes);
 
 // Routes (you'll plug them in soon)
 app.use("/api/tickets", require("./routes/ticketRoutes"));
