@@ -18,6 +18,11 @@ const ticketSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    status: {
+      type: String,
+      enum: ["Open", "In Progress", "Resolved", "Closed"],
+      default: "Open",
+    },
     // attachment: String // If you add file upload later
   },
   { timestamps: true }

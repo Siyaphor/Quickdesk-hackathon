@@ -3,14 +3,16 @@ const router = express.Router();
 const {
   createTicket,
   getTicketsByUser,
+  updateTicketStatus,
+  deleteTicket, 
+  getAdminSummary,
 } = require("../controllers/ticketController");
-
-// @route   POST /api/tickets
-// @desc    Create a new ticket
+router.get("/admin/summary", getAdminSummary);
 router.post("/", createTicket);
-
-// @route   GET /api/tickets?user=himanshi123
-// @desc    Get all tickets by user
 router.get("/", getTicketsByUser);
+router.patch("/:id", updateTicketStatus);
+router.delete("/:id", deleteTicket);
+
+
 
 module.exports = router;
