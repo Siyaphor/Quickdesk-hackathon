@@ -2,303 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>QuickDesk - Support</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    :root {
-      --bg-dark: #0e1426;
-      --accent1: #8b5cf6;
-      --accent2: #6366f1;
-      --accent3: #c084fc;
-      --radius: 16px;
-      --card: rgba(255,255,255,0.03);
-      --text: #e6ebff;
-      --muted: #9aa7c1;
-      --shadow: 0 40px 80px -20px rgba(139,92,246,0.35);
-      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    }
-    *{box-sizing:border-box;margin:0;padding:0;}
-    body {
-      min-height:100vh;
-      background: linear-gradient(135deg,#0f172a 0%,#1f2d3a 70%);
-      color: var(--text);
-      position: relative;
-      overflow-x:hidden;
-    }
-    .hex-bg {
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:0;
-      mix-blend-mode: overlay;
-      opacity:0.15;
-    }
-    .hex-bg svg{width:100%;height:100%;display:block;}
-    .glow-overlay {
-      position:fixed;
-      inset:0;
-      background: radial-gradient(circle at 20% 30%, rgba(139,92,246,0.15), transparent 50%), radial-gradient(circle at 80% 70%, rgba(99,102,241,0.15), transparent 50%);
-      filter: blur(140px);
-      mix-blend-mode: screen;
-      z-index:0;
-    }
-    .glow-circle {
-      position:absolute;
-      border-radius:50%;
-      filter:blur(70px);
-      opacity:.5;
-      pointer-events:none;
-      mix-blend-mode: screen;
-    }
-    .glow-1 { width: 200px; height: 200px; background: radial-gradient(circle at 30% 30%, rgba(139,92,246,0.5), transparent 60%); top: 10%; left: 5%; }
-    .glow-2 { width: 260px; height: 260px; background: radial-gradient(circle at 50% 50%, rgba(14,165,233,0.4), transparent 70%); bottom: 5%; right: 7%; }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuickDesk - User UI by Nandni</title>
 
-    nav {
-      position:relative;
-      z-index:2;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:18px 24px;
-      max-width:1100px;
-      margin:0 auto;
-      gap:12px;
-    }
-    nav h1 {
-      font-size:1.6rem;
-      background: linear-gradient(90deg,var(--accent1),var(--accent3));
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-    nav ul {
-      display:flex;
-      gap:18px;
-      list-style:none;
-    }
-    nav a {
-      position:relative;
-      text-decoration:none;
-      color: var(--text);
-      padding:6px 12px;
-      border-radius:8px;
-      font-weight:500;
-      transition: background .25s, transform .2s;
-    }
-    nav a:hover {
-      background: rgba(255,255,255,0.04);
-      transform: translateY(-1px);
-    }
-
-    main {
-      position:relative;
-      z-index:2;
-      max-width:1100px;
-      margin:0 auto;
-      padding:1rem 1.25rem 2rem;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:32px;
-    }
-    .panel {
-      background: var(--card);
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:20px;
-      padding:26px 22px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-      position:relative;
-      overflow:hidden;
-    }
-    .panel h2 {
-      font-size:1.9rem;
-      margin-bottom:6px;
-      background: linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-    .subtitle {
-      font-size:.9rem;
-      color: var(--muted);
-      margin-bottom:16px;
-    }
-    form {
-      display:flex;
-      flex-direction:column;
-      gap:16px;
-    }
-    .field {
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-    .field label {
-      font-size:.55rem;
-      letter-spacing:1px;
-      text-transform:uppercase;
-      color: rgba(255,255,255,0.7);
-    }
-    .field input,
-    .field textarea,
-    .field select {
-      padding:14px 16px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-      font-size:1rem;
-      outline:none;
-      resize:none;
-      transition: all .25s;
-    }
-    .field input:focus,
-    .field textarea:focus,
-    .field select:focus {
-      box-shadow: 0 0 26px rgba(99,102,241,0.5);
-      border-color: var(--accent2);
-      transform: scale(1.01);
-    }
-    .btn {
-      cursor:pointer;
-      border:none;
-      border-radius:999px;
-      padding:14px 18px;
-      font-weight:600;
-      background: linear-gradient(135deg,var(--accent1),var(--accent3));
-      color:#fff;
-      letter-spacing:1px;
-      position:relative;
-      overflow:hidden;
-      transition: transform .2s, filter .2s;
-      box-shadow:0 18px 60px -10px rgba(139,92,246,0.6);
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.05);
-    }
-    .tickets { margin-top:8px; }
-    #ticketDisplay {
-      list-style:none;
-      padding:0;
-      margin:0;
-    }
-    .ticket-card {
-      background: rgba(255,255,255,0.03);
-      border:1px solid rgba(255,255,255,0.1);
-      border-radius:14px;
-      padding:16px 18px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:14px;
-      position:relative;
-      margin-bottom:14px;
-      flex-wrap:wrap;
-    }
-    .ticket-info { display:flex; gap:12px; flex:1; min-width:200px; }
-    .ticket-subject { font-weight:700; font-size:1rem; }
-    .user-display { font-size:.65rem; margin-top:4px; color:rgba(255,255,255,0.7); }
-    .badge {
-      padding:6px 16px;
-      border-radius:999px;
-      font-size:.55rem;
-      text-transform:uppercase;
-      letter-spacing:1px;
-      font-weight:600;
-      display:inline-block;
-    }
-    .open { background:rgba(245,158,11,0.15); color:#f59e0b; box-shadow:0 0 14px rgba(245,158,11,0.5); }
-    .in_progress { background:rgba(14,165,233,0.15); color:#0ea5e9; box-shadow:0 0 14px rgba(14,165,233,0.5); }
-    .closed { background:rgba(16,185,129,0.15); color:#10b981; box-shadow:0 0 14px rgba(16,185,129,0.5); }
-    .no-tickets {
-      padding:20px;
-      border:2px dashed rgba(255,255,255,0.2);
-      border-radius:12px;
-      text-align:center;
-      color: var(--muted);
-    }
-    @media (max-width:1000px){
-      main { grid-template-columns:1fr; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="hex-bg">
-    <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
-      <defs>
-        <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-      <g filter="url(#glow)" stroke-linejoin="round" stroke-linecap="round" stroke-width="1">
-        <g transform="translate(80,80)" stroke="rgba(139,92,246,0.2)">
-          <path d="M0,30 l26,-15 l26,15 l0,30 l-26,15 l-26,-15 z" />
-          <path d="M78,30 l26,-15 l26,15 l0,30 l-26,15 l-26,-15 z" />
-          <path d="M156,30 l26,-15 l26,15 l0,30 l-26,15 l-26,-15 z" />
-        </g>
-        <g transform="translate(40,140)" stroke="rgba(99,102,241,0.2)">
-          <path d="M0,30 l26,-15 l26,15 l0,30 l-26,15 l-26,-15 z" />
-          <path d="M78,30 l26,-15 l26,15 l0,30 l-26,15 l-26,-15 z" />
-          <path d="M156,30 l26,-15 l26,15 l0,30 l-26,15 l-26,-15 z" />
-        </g>
-        <g transform="translate(80,200)" stroke="rgba(139,92,246,0.15)">
-          <path d="M0,30 l26,-15 l26,15 l0,30 l-26,15 l-26,-15 z" />
-          <path d="M78,30 l26,-15 l26,15 l0,30 l-26,15 l-26,-15 z" />
-          <path d="M156,30 l26,-15 l26,15 l0,30 l-26,15 l-26,-15 z" />
-        </g>
-      </g>
-    </svg>
-  </div>
-  <div class="glow-overlay"></div>
-  <div class="glow-circle glow-1"></div>
-  <div class="glow-circle glow-2"></div>
-
   <nav>
-    <h1>QuickDesk</h1>
-    <ul>
-      <li><a href="#raiseTicket">Raise Ticket</a></li>
-      <li><a href="#myTickets">My Tickets</a></li>
-    </ul>
+    <div class="nav-container">
+      <h1>QuickDesk</h1>
+      <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#ticketForm">Raise Ticket</a></li>
+        <li><a href="#ticketDisplay">My Tickets</a></li>
+      </ul>
+    </div>
   </nav>
 
   <main>
-    <div class="panel" id="raiseTicket">
+    <section class="ticket-form">
       <h2>Raise a Support Ticket</h2>
-      <p class="subtitle">Describe your issue and we will get back to you soon.</p>
       <form id="ticketForm">
-        <div class="field">
-          <label for="subject">Subject</label>
-          <input type="text" id="subject" placeholder="Subject (min 5 characters)" required minlength="5" />
-        </div>
-        <div class="field">
-          <label for="category">Category</label>
-          <select id="category" required>
-            <option value="">Select Category</option>
-            <option value="Technical">Technical</option>
-            <option value="Billing">Billing</option>
-            <option value="General">General</option>
+        <input type="text" id="subject" placeholder="Subject (min 5 characters)"  />
+        
+        <select id="category" required>
+          <option value="">Select Category</option>
+          <option value="Technical">Technical</option>
+          <option value="Billing">Billing</option>
+          <option value="General">General</option>
         </select>
-        </div>
-        <div class="field">
-          <label for="description">Description</label>
-          <textarea id="description" placeholder="Describe your issue (min 10 characters)" required minlength="10" rows="4"></textarea>
-        </div>
-        <button type="submit" class="btn">Submit Ticket</button>
-      </form>
-    </div>
 
-    <div class="panel" id="myTickets">
+        <textarea id="description" placeholder="Describe your issue (min 10 characters)" ></textarea>
+
+        <button type="submit">Submit Ticket</button>
+      </form>
+    </section>
+
+    <section class="ticket-list">
       <h2>My Tickets</h2>
-      <p class="subtitle">Track the status of your reported issues.</p>
-      <div class="tickets">
-        <ul id="ticketDisplay">
-          <div class="no-tickets">No tickets yet. Raise one above.</div>
-        </ul>
-      </div>
-<script src="script.js"></script>
+      <ul id="ticketDisplay"></ul>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
