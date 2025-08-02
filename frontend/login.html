@@ -1,23 +1,183 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Login | QuickDesk</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      --bg1: #0f172a;
+      --bg2: #1f2d3a;
+      --accent-start: #8b5cf6;
+      --accent-mid: #6366f1;
+      --accent-end: #c084fc;
+      --radius: 16px;
+      --shadow: 0 30px 60px -10px rgba(139,92,246,0.4);
+      --text: #e8ecff;
+      --muted: #9aa7c1;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body {
+      min-height:100vh;
+      background: radial-gradient(circle at top left, var(--bg1), var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      overflow:hidden;
+      color: var(--text);
+    }
+
+    /* Hexagonal glowing grid */
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="173" viewBox="0 0 200 173"><polygon points="100,0 200,50 200,150 100,200 0,150 0,50" stroke="rgba(139,92,246,0.25)" stroke-width="2" fill="none"/></svg>');
+      background-size: 100px auto;
+      opacity: 0.08;
+      animation: gridMove 20s linear infinite;
+      z-index: 0;
+    }
+    @keyframes gridMove {
+      from { background-position: 0 0; }
+      to { background-position: 100px 100px; }
+    }
+
+    /* Glowing overlay */
+    .bg-glow {
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(120deg, rgba(139,92,246,0.2), rgba(14,165,233,0.15), rgba(236,72,153,0.15));
+      filter: blur(140px);
+      mix-blend-mode: screen;
+      animation: drift 18s infinite alternate ease-in-out;
+      z-index:0;
+    }
+    @keyframes drift {
+      0% { transform: scale(1) translate(0,0); }
+      100% { transform: scale(1.05) translate(20px,-15px); }
+    }
+
+    .login-wrapper {
+      position:relative;
+      z-index:1;
+      width:100%;
+      max-width:420px;
+      padding:2rem;
+    }
+    .login-box {
+      background: rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      padding:2.5rem 2rem;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      gap:1rem;
+      animation: fadeIn 1.2s ease;
+    }
+    @keyframes fadeIn {
+      from {opacity:0; transform: translateY(20px);}
+      to {opacity:1; transform: translateY(0);}
+    }
+    .login-box h2 {
+      font-size:2rem;
+      margin-bottom:4px;
+      background: linear-gradient(90deg, var(--accent-start), var(--accent-mid), var(--accent-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 10px rgba(139,92,246,0.6);
+    }
+    .subtitle {
+      font-size:0.9rem;
+      color: var(--muted);
+    }
+    .input-group {
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    label {
+      font-size:0.7rem;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      color:#c5cae9;
+    }
+    input {
+      padding:12px 14px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      font-size:1rem;
+      outline:none;
+      transition: border .3s, box-shadow .3s, transform .2s;
+    }
+    input:focus {
+      border-color: var(--accent-mid);
+      box-shadow: 0 0 20px rgba(99,102,241,0.6);
+      transform: scale(1.02);
+    }
+    button {
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:999px;
+      background: linear-gradient(135deg, var(--accent-start), var(--accent-mid), var(--accent-end));
+      color:#fff;
+      font-weight:600;
+      letter-spacing:1px;
+      cursor:pointer;
+      margin-top:4px;
+      position: relative;
+      overflow:hidden;
+      transition: transform .25s, filter .25s;
+      box-shadow: 0 15px 50px -10px rgba(139,92,246,0.6);
+    }
+    button:hover {
+      transform: translateY(-2px) scale(1.02);
+      filter: brightness(1.07);
+    }
+    .info-text {
+      font-size:0.8rem;
+      color: var(--muted);
+      text-align:center;
+    }
+    .info-text a {
+      color: var(--accent-start);
+      text-decoration:none;
+    }
+    .error {
+      background: rgba(255,100,100,0.15);
+      border:1px solid #ff6b6b;
+      padding:8px 12px;
+      border-radius:8px;
+      font-size:0.85rem;
+      color:#ffdada;
+    }
+  </style>
 </head>
-<body class="login-page">
+<body>
+  <div class="bg-glow"></div>
   <div class="login-wrapper">
     <div class="login-box">
       <h2>Welcome Back 👋</h2>
-      <p class="subtitle">Please login to your account</p>
-      <form id="loginForm">
+      <p class="subtitle">Sign in to continue to QuickDesk</p>
+      <div id="errorContainer"></div>
+      <form id="loginForm" novalidate>
         <div class="input-group">
           <label for="email">Email</label>
-          <input type="email" id="email" placeholder="Enter your email" required />
+          <input type="email" id="email" placeholder="you@example.com" required />
         </div>
         <div class="input-group">
           <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Enter your password" required />
+          <input type="password" id="password" placeholder="••••••••" required />
         </div>
         <button type="submit">Login</button>
         <p class="info-text">Forgot your password? <a href="#">Reset here</a></p>
@@ -25,6 +185,35 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const form = document.getElementById("loginForm");
+    const errorContainer = document.getElementById("errorContainer");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      errorContainer.innerHTML = "";
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!email || !password) {
+        showError("Both email and password are required.");
+        return;
+      }
+
+      if (!/^\S+@\S+\.\S+$/.test(email)) {
+        showError("Please enter a valid email address.");
+        return;
+      }
+
+      const fakeToken = "fake-jwt-token";
+      localStorage.setItem("token", fakeToken);
+      alert("Logged in as " + email);
+    });
+
+    function showError(msg) {
+      errorContainer.innerHTML = `<div class="error">${msg}</div>`;
+    }
+  </script>
 </body>
 </html>
