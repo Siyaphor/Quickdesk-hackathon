@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuickDesk - User UI by Nandni</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav>
+    <div class="nav-container">
+      <h1>QuickDesk</h1>
+      <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#ticketForm">Raise Ticket</a></li>
+        <li><a href="#ticketDisplay">My Tickets</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <section class="ticket-form">
+      <h2>Raise a Support Ticket</h2>
+      <form id="ticketForm">
+        <input type="text" id="subject" placeholder="Subject (min 5 characters)" required minlength="5" />
+        
+        <select id="category" required>
+          <option value="">Select Category</option>
+          <option value="Technical">Technical</option>
+          <option value="Billing">Billing</option>
+          <option value="General">General</option>
+        </select>
+
+        <textarea id="description" placeholder="Describe your issue (min 10 characters)" required minlength="10"></textarea>
+
+        <button type="submit">Submit Ticket</button>
+      </form>
+    </section>
+
+    <section class="ticket-list">
+      <h2>My Tickets</h2>
+      <ul id="ticketDisplay"></ul>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
