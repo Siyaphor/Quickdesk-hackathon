@@ -3,13 +3,281 @@
 <head>
   <meta charset="UTF-8" />
   <title>Admin Dashboard | QuickDesk</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      --bg1: #0f172a;
+      --bg2: #1f2d3a;
+      --card: rgba(255,255,255,0.03);
+      --radius: 16px;
+      --shadow: 0 30px 60px -10px rgba(79,70,229,0.4);
+      --glow: rgba(79,70,229,0.6);
+      --accent:#8b5cf6;
+      --text:#f0f6ff;
+      --muted:#a0aebb;
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      min-height:100vh;
+      overflow:hidden;
+      background: linear-gradient(135deg,var(--bg1) 0%, var(--bg2) 60%);
+      color: var(--text);
+      position:relative;
+      display:flex;
+    }
+    /* moving gradient overlay */
+    body::before {
+      content:"";
+      position: absolute;
+      inset:0;
+      background: linear-gradient(120deg, rgba(139,92,246,0.2), rgba(79,70,229,0.2), rgba(14,165,233,0.2));
+      filter: blur(80px);
+      mix-blend-mode: overlay;
+      animation: shift 15s infinite alternate ease-in-out;
+      z-index:0;
+    }
+    @keyframes shift {
+      0% { transform: scale(1) translate(0,0); }
+      100% { transform: scale(1.05) translate(10px,-10px); }
+    }
+    .sidebar{
+      width:260px;
+      background: rgba(17,24,39,0.95);
+      padding:2rem 1rem;
+      display:flex;
+      flex-direction:column;
+      gap:1.5rem;
+      position:relative;
+      z-index:1;
+      box-shadow: 0 0 30px var(--glow);
+      border-right:1px solid rgba(255,255,255,0.05);
+    }
+    .sidebar h2{
+      font-size:1.5rem;
+      margin-bottom:0.5rem;
+      letter-spacing:1px;
+      position: relative;
+    }
+    .sidebar h2::after {
+      content: '';
+      position: absolute;
+      left:0;
+      bottom:-6px;
+      width:40px;
+      height:4px;
+      background: linear-gradient(90deg,var(--accent), #c084fc);
+      border-radius:2px;
+      filter:drop-shadow(0 0 8px var(--glow));
+    }
+    .sidebar ul{
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap:1rem;
+      padding:0;
+    }
+    .sidebar a{
+      display:block;
+      text-decoration:none;
+      color:#cbd5e1;
+      padding:10px 14px;
+      border-radius:10px;
+      position:relative;
+      font-size:0.95rem;
+      transition: all .25s;
+      overflow:hidden;
+    }
+    .sidebar a.active,
+    .sidebar a:hover {
+      color:#fff;
+      background: rgba(139,92,246,0.15);
+      box-shadow: 0 0 16px var(--glow);
+    }
+    .main-content{
+      flex:1;
+      padding:2rem 2.5rem;
+      overflow:auto;
+      position:relative;
+      z-index:1;
+    }
+    .main-content h1{
+      font-size:2rem;
+      margin-bottom:0.25rem;
+      display:inline-block;
+      position: relative;
+    }
+    .main-content h1::after {
+      content: '✨';
+      margin-left:6px;
+      animation: pop 3s infinite;
+    }
+    @keyframes pop {
+      0%,100%{ transform: translateY(0); }
+      50%{ transform: translateY(-4px); }
+    }
+    .main-content p{
+      color: var(--muted);
+      margin-bottom:1.5rem;
+    }
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:1rem;
+      margin-bottom:1.75rem;
+    }
+    .card{
+      background: var(--card);
+      padding:1rem 1.25rem;
+      border-radius: var(--radius);
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      border:1px solid rgba(255,255,255,0.08);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      transition: transform .3s;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+    }
+    .card h3{
+      font-size:0.9rem;
+      margin-bottom:0.5rem;
+      text-transform: uppercase;
+      letter-spacing:1px;
+      font-weight:600;
+      color:#cbd5e1;
+    }
+    .card p{
+      font-size:1.75rem;
+      font-weight:700;
+      margin:0;
+      position: relative;
+    }
+    .card::before {
+      content:'';
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      box-shadow: 0 0 30px 4px rgba(139,92,246,0.2);
+      border-radius: var(--radius);
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      background: rgba(17,24,39,0.9);
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow: 0 30px 60px -10px rgba(79,70,229,0.5);
+      margin-top:0.5rem;
+    }
+    thead{
+      background: rgba(255,255,255,0.03);
+    }
+    th, td{
+      text-align:left;
+      padding:14px 16px;
+      font-size:0.85rem;
+      color: #e8ecff;
+    }
+    th{
+      font-weight:600;
+      letter-spacing:1px;
+      position: relative;
+    }
+    tbody tr{
+      border-bottom:1px solid rgba(255,255,255,0.07);
+      transition: background .2s;
+    }
+    tbody tr:hover {
+      background: rgba(255,255,255,0.05);
+    }
+    td button{
+      padding:6px 14px;
+      border:none;
+      background: linear-gradient(135deg,var(--accent),#c084fc);
+      color:#fff;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:0.75rem;
+      letter-spacing:0.5px;
+      text-transform:uppercase;
+      font-weight:600;
+      position: relative;
+      overflow:hidden;
+      box-shadow: 0 0 18px rgba(139,92,246,0.6);
+      transition: transform .2s;
+    }
+    td button:hover{
+      transform: scale(1.05);
+    }
+    .status-badge{
+      display:inline-block;
+      padding:6px 14px;
+      border-radius:999px;
+      font-size:0.65rem;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      position: relative;
+      background: rgba(255,255,255,0.05);
+      color:#fff;
+    }
+    .open { background: #f59e0b; box-shadow: 0 0 12px rgba(245,158,11,0.7); }
+    .in_progress { background: #0ea5e9; box-shadow: 0 0 12px rgba(14,165,233,0.7); }
+    .closed { background: #10b981; box-shadow: 0 0 12px rgba(16,185,129,0.7); }
+
+    .glow-circle {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.7;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      animation: float 12s infinite ease-in-out;
+    }
+    .glow-1 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle at 30% 30%, rgba(139,92,246,0.6), transparent 70%);
+      top: 10%;
+      left: 60%;
+      animation-delay: 0s;
+    }
+    .glow-2 {
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle at 50% 50%, rgba(14,165,233,0.5), transparent 70%);
+      top: 60%;
+      left: 20%;
+      animation-delay: 3s;
+    }
+    @keyframes float {
+      0% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(15px,-10px) scale(1.05); }
+      100% { transform: translate(0,5px) scale(1); }
+    }
+
+    @media (max-width: 1000px){
+      .sidebar{display:none;}
+      body{flex-direction:column;}
+      .main-content{padding:1rem;}
+      .cards{grid-template-columns:1fr;}
+    }
+  </style>
 </head>
 <body class="admin-page">
+  <!-- glowing background circles -->
+  <div class="glow-circle glow-1"></div>
+  <div class="glow-circle glow-2"></div>
+
   <div class="sidebar">
     <h2>QuickDesk Admin</h2>
     <ul>
-      <li><a href="#">Dashboard</a></li>
+      <li><a href="#" class="active">Dashboard</a></li>
       <li><a href="#">Tickets</a></li>
       <li><a href="#">Users</a></li>
       <li><a href="#">Settings</a></li>
@@ -17,21 +285,21 @@
   </div>
 
   <div class="main-content">
-    <h1>Welcome Admin 🎉</h1>
-    <p>You are now inside the admin dashboard.</p>
+    <h1>Welcome Admin</h1>
+    <p>You are now inside the glowing admin dashboard.</p>
 
     <div class="cards">
       <div class="card">
         <h3>Open Tickets</h3>
-        <p>12</p>
+        <p id="openCount">0</p>
       </div>
       <div class="card">
         <h3>Closed Tickets</h3>
-        <p>34</p>
+        <p id="closedCount">0</p>
       </div>
       <div class="card">
         <h3>Total Users</h3>
-        <p>5</p>
+        <p id="userCount">0</p>
       </div>
     </div>
 
@@ -45,21 +313,43 @@
           <th>Action</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>Login Issue</td>
-          <td>Open</td>
-          <td><button>View</button></td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Dashboard Bug</td>
-          <td>Closed</td>
-          <td><button>View</button></td>
-        </tr>
+      <tbody id="recentTickets">
+        <!-- filled by script -->
       </tbody>
     </table>
   </div>
+
+  <script>
+    // Simulated dynamic data
+    const stats = {
+      open: 12,
+      closed: 34,
+      users: 5,
+      recent: [
+        { id: "1", subject: "Login Issue", status: "open" },
+        { id: "2", subject: "Dashboard Bug", status: "closed" },
+        { id: "3", subject: "API Timeout", status: "in_progress" },
+      ],
+    };
+
+    document.getElementById("openCount").textContent = stats.open;
+    document.getElementById("closedCount").textContent = stats.closed;
+    document.getElementById("userCount").textContent = stats.users;
+
+    const tbody = document.getElementById("recentTickets");
+    tbody.innerHTML = "";
+
+    stats.recent.forEach(t => {
+      const tr = document.createElement("tr");
+      const statusClass = t.status.replace(/\s+/g, "_");
+      tr.innerHTML = `
+        <td>${t.id}</td>
+        <td>${t.subject}</td>
+        <td><span class="status-badge ${statusClass}">${t.status.replace('_',' ')}</span></td>
+        <td><button>View</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  </script>
 </body>
 </html>
