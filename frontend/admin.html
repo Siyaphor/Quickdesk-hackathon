@@ -2,10 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin Dashboard</title>
+  <title>Admin Dashboard | QuickDesk</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <h1>Welcome to Admin Dashboard 🎉</h1>
-  <p>Login successful — you are now inside the admin area.</p>
+<body class="admin-page">
+  <div class="sidebar">
+    <h2>QuickDesk Admin</h2>
+    <ul>
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">Tickets</a></li>
+      <li><a href="#">Users</a></li>
+      <li><a href="#">Settings</a></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <h1>Welcome Admin 🎉</h1>
+    <p>You are now inside the admin dashboard.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Open Tickets</h3>
+        <p>12</p>
+      </div>
+      <div class="card">
+        <h3>Closed Tickets</h3>
+        <p>34</p>
+      </div>
+      <div class="card">
+        <h3>Total Users</h3>
+        <p>5</p>
+      </div>
+    </div>
+
+    <h3>Recent Tickets</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Subject</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Login Issue</td>
+          <td>Open</td>
+          <td><button>View</button></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Dashboard Bug</td>
+          <td>Closed</td>
+          <td><button>View</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </body>
 </html>
