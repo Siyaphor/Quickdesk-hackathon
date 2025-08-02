@@ -1,4 +1,5 @@
 const Ticket = require("../models/Ticket");
+const User = require("../models/User"); // ensure this exists
 
 // POST /api/tickets
 const createTicket = async (req, res) => {
@@ -30,11 +31,10 @@ const createTicket = async (req, res) => {
   }
 };
 
-// GET /api/tickets?user=himanshi123
 // GET /api/tickets?user=himanshi123&status=Open&category=Billing
 const getTicketsByUser = async (req, res) => {
   try {
-    let { user, status, category } = req.query;
+    const { user, status, category } = req.query;
 
     const filter = {};
     if (user) filter.user = user.trim();
@@ -71,6 +71,7 @@ const updateTicketStatus = async (req, res) => {
     res.status(500).json({ message: "Failed to update ticket", error: error.message });
   }
 };
+
 // DELETE /api/tickets/:id
 const deleteTicket = async (req, res) => {
   try {
@@ -87,7 +88,6 @@ const deleteTicket = async (req, res) => {
     res.status(500).json({ message: "Failed to delete ticket", error: error.message });
   }
 };
-const User = require("../models/User"); // make sure you have this model
 
 // GET /api/admin/summary
 const getAdminSummary = async (req, res) => {
